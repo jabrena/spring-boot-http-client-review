@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@Service
+@Service("restemplate")
 public class MyServiceImpl implements MyService {
 
     @Autowired
