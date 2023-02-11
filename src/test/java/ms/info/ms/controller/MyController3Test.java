@@ -1,4 +1,4 @@
-package ms.info.ms;
+package ms.info.ms.controller;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.restassured.RestAssured;
@@ -12,16 +12,13 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = { "address=http://localhost:8090/greek" })
-public class MyControllerTest {
+public class MyController3Test {
 
     @LocalServerPort
     private int port;
@@ -40,7 +37,7 @@ public class MyControllerTest {
     }
 
     @Test
-    void should_use_restTemplate() {
+    void should_return_gods() {
 
         //Given
         wireMockServer.stubFor(get(urlEqualTo("/greek"))
@@ -72,7 +69,7 @@ public class MyControllerTest {
 
         //When
         //Then
-        var address = "http://localhost:" + port + "/api/v1/rest-template";
+        var address = "http://localhost:" + port + "/api/v1/http-interface";
         RestAssured
             .given().log().all()
             .when().get(address)

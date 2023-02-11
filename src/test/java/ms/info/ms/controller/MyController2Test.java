@@ -1,4 +1,4 @@
-package ms.info.ms;
+package ms.info.ms.controller;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.restassured.RestAssured;
