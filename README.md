@@ -2,8 +2,8 @@
 
 A review of different ways to communicate with a REST endpoint
 
-- [ ] Spring RestTemplate
-- [ ] Spring WebClient
+- [x] Spring RestTemplate
+- [x] Spring WebClient
 - [ ] Spring Http Interfaces
 
 ## References
