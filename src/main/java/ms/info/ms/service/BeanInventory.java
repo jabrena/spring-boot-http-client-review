@@ -22,13 +22,11 @@ public class BeanInventory {
         String SPACE = " ";
 
         Arrays.stream(allBeanNames)
-                .map(beanName -> {
-                    return new StringBuilder()
-                            .append(counter.getAndIncrement())
-                            .append(SPACE)
-                            .append(beanName)
-                            .toString();
-                })
+                .map(beanName -> new StringBuilder()
+                        .append(counter.getAndIncrement())
+                        .append(SPACE)
+                        .append(beanName)
+                        .toString())
                 .forEach(System.out::println);
     }
 
