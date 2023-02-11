@@ -22,6 +22,7 @@ public class BeanInventory {
         String SPACE = " ";
 
         Arrays.stream(allBeanNames)
+                .sorted()
                 .map(beanName -> new StringBuilder()
                         .append(counter.getAndIncrement())
                         .append(SPACE)
