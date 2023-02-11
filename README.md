@@ -1,10 +1,12 @@
 # spring-boot-http-client-poc
 
+[![CI Builds](https://github.com/jabrena/spring-boot-http-client-poc/actions/workflows/build.yaml/badge.svg)](https://github.com/jabrena/spring-boot-http-client-poc/actions/workflows/build.yaml)
+
 A review of different ways to communicate with a REST endpoint
 
 - [x] Spring RestTemplate
 - [x] Spring WebClient
-- [ ] Spring Http Interfaces
+- [x] Spring Http Interfaces
 
 ## References
 

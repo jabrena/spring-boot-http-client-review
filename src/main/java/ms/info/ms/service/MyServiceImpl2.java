@@ -1,4 +1,4 @@
-package ms.info.ms;
+package ms.info.ms.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
