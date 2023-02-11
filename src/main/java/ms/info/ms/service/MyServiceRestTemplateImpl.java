@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service("restemplate")
-public class MyServiceImpl implements MyService {
+public class MyServiceRestTemplateImpl implements MyService {
 
     @Autowired
     private RestTemplate restTemplate;

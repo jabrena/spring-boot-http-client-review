@@ -1,5 +1,6 @@
 package ms.info.ms.controller;
 
+import ms.info.ms.service.GodService;
 import ms.info.ms.service.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,11 +13,10 @@ import java.util.List;
 public class MyController3 {
 
     @Autowired
-    @Qualifier("http-interface")
-    private MyService myService;
+    private GodService godService;
 
     @GetMapping("/api/v1/http-interface")
     public List<String> getData() {
-        return myService.getGods();
+        return godService.getGods();
     }
 }

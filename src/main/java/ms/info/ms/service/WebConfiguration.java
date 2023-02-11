@@ -1,6 +1,5 @@
 package ms.info.ms.service;
 
-import ms.info.ms.service.GodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -13,6 +12,8 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
 public class WebConfiguration {
+
+    //RestTemplate
     private RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
@@ -25,15 +26,20 @@ public class WebConfiguration {
         return restTemplateBuilder.build();
     }
 
+    //Web Client
     @Value("${address}")
     private String address;
 
     @Bean
-    GodService personService(){
-        WebClient client = WebClient.builder()
+    WebClient webClient() {
+        return WebClient.builder()
                 .baseUrl(address)
                 .build();
+    }
 
+    //Spring http interfaces
+    @Bean
+    GodService godService(WebClient client) {
         HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory
                 .builder(WebClientAdapter.forClient(client))
                 .build();
