@@ -19,13 +19,13 @@ public class BeanInventory {
     public void after() {
         String[] allBeanNames = applicationContext.getBeanDefinitionNames();
         AtomicInteger counter = new AtomicInteger();
-        String SPACE = " ";
+        String space = " ";
 
         Arrays.stream(allBeanNames)
                 .sorted()
                 .map(beanName -> new StringBuilder()
                         .append(counter.incrementAndGet())
-                        .append(SPACE)
+                        .append(space)
                         .append(beanName)
                         .toString())
                 .forEach(System.out::println);
