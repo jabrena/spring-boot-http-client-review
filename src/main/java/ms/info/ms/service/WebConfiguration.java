@@ -14,15 +14,13 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 public class WebConfiguration {
 
     //Spring RestTemplate
-    private RestTemplateBuilder restTemplateBuilder;
-
-    @Autowired
-    public void setRestTemplateBuilder(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplateBuilder = restTemplateBuilder;
+    @Bean
+    public RestTemplateBuilder restTemplateBuilder() {
+        return new RestTemplateBuilder();
     }
 
     @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build();
     }
 
