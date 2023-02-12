@@ -8,6 +8,14 @@ A review of different ways to communicate with a REST endpoint
 - [x] Spring WebClient
 - [x] Spring Http Interfaces
 
+## How to run in local?
+
+```bash
+sdk env
+sdk install mvnd
+mvnd verify 
+```
+
 ## References
 
 - https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestTemplate.html

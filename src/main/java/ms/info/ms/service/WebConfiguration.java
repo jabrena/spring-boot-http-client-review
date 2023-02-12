@@ -13,7 +13,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class WebConfiguration {
 
-    //RestTemplate
+    //Spring RestTemplate
     private RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
@@ -26,7 +26,7 @@ public class WebConfiguration {
         return restTemplateBuilder.build();
     }
 
-    //Web Client
+    //Spring Web Client
     @Value("${address}")
     private String address;
 

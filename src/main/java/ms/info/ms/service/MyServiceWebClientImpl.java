@@ -1,5 +1,6 @@
 package ms.info.ms.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -9,18 +10,15 @@ import java.util.List;
 @Service("webclient")
 public class MyServiceWebClientImpl implements MyService {
 
-    @Value("${address}")
-    private String address;
+    @Autowired
+    private WebClient webClient;
 
     @Override
     public List<String> getGods() {
-        var result = WebClient.builder()
-                .baseUrl(address)
-                .build()
+        return webClient
                 .get()
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
                 .block();
-        return result;
     }
 }
