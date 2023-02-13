@@ -28,9 +28,6 @@ class BeanInventoryTests {
 		@Bean
 		public BeanInventory getBeanInventory(ConfigurableApplicationContext applicationContext) {
 			String[] allBeanNames = applicationContext.getBeanDefinitionNames();
-			AtomicInteger counter = new AtomicInteger();
-			String space = " ";
-
 			return new BeanInventory(Arrays.stream(allBeanNames).toList());
 		}
 	}
