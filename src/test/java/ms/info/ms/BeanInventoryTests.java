@@ -1,6 +1,5 @@
 package ms.info.ms;
 
-import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,24 +37,25 @@ class BeanInventoryTests {
 	@Test
 	void should_be_stable_number_of_beans() {
 
+		System.out.println("ECO");
+
 		//Given
 		int expectedBeans = 158;
 
 		//When
 		AtomicInteger counter = new AtomicInteger();
 		String space = " ";
-		var result = beanInventory.beans().stream()
+		beanInventory.beans().stream()
 				.sorted()
 				.map(beanName -> new StringBuilder()
 						.append(counter.incrementAndGet())
 						.append(space)
 						.append(beanName)
 						.toString())
-				.peek(System.out::println)
-				.count();
+				.forEach(System.out::println);
 
 		//Then
-		then(result).isEqualTo(expectedBeans);
+		then(beanInventory.beans().size()).isEqualTo(expectedBeans);
 	}
 
 }
