@@ -3,11 +3,9 @@ package ms.info.ms.controller;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
-import ms.info.ms.service.BeanInventory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
@@ -23,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = { "address=http://localhost:8090/greek" })
-public class MyControllerTest {
+public class MyController1Test {
 
     @LocalServerPort
     private int port;
