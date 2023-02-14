@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 @TestConfiguration
 public class BeanInventoryConfiguration {
@@ -20,15 +21,14 @@ public class BeanInventoryConfiguration {
 
 	@Bean
 	public BeanInventory getBeanInventory(ConfigurableApplicationContext applicationContext) {
+		BiFunction<ConfigurableApplicationContext, String, Tuple> getTuple = (context, beanName) -> {
+			String pkg = Objects.toString(context.getType(beanName).getCanonicalName());
+			return new Tuple(beanName, Objects.isNull(pkg) ? "" : pkg);
+		};
+
 		String[] allBeanNames = applicationContext.getBeanDefinitionNames();
 		return new BeanInventory(Arrays.stream(allBeanNames)
-				.map(str -> getTuple(applicationContext, str))
+				.map(str -> getTuple.apply(applicationContext, str))
 				.toList());
 	}
-
-	private Tuple getTuple(ConfigurableApplicationContext applicationContext, String beanName) {
-		String pkg = Objects.toString(applicationContext.getType(beanName).getCanonicalName());
-		return new Tuple(beanName, Objects.isNull(pkg) ? "Unknown" : pkg);
-	}
-
 }
