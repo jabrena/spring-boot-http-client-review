@@ -1,4 +1,4 @@
-package ms.info.ms.service;
+package info.jab.ms.service;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package ms.info.ms.service;
+package info.jab.ms.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
