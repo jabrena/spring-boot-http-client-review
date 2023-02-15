@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Import;
 
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -25,53 +27,50 @@ class BeanInventoryTests {
 	void should_be_stable_number_of_user_beans() {
 
 		//Given
+
+		//TODO it is missing the Bean from a http interface
 		int expectedBeans = 7;
 		String rootPackage = "info.jab.ms";
 
 		//When
 		AtomicInteger counter = new AtomicInteger();
-		String space = " ";
 		var userBeans = beanInventory.beans().stream()
 				.filter(t -> t.pkg().contains(rootPackage))
-				.sorted(Comparator.comparing(BeanInventoryConfiguration.Tuple::beanName))
-				.map(beanName -> new StringBuilder()
-						.append(counter.incrementAndGet())
-						.append(space)
-						.append(beanName.beanName())
-						.append(space)
-						.append(beanName.pkg())
-						.toString())
-				.peek(System.out::println)
+				.peek(bean -> expand.apply(counter, bean))
 				.toList();
 
 		//Then
 		then(userBeans.size()).isEqualTo(expectedBeans);
 	}
 
+	BiFunction<AtomicInteger, BeanInventoryConfiguration.Tuple, String> expand = (counter, bean) -> {
+		String space = " ";
+		var message = new StringBuilder()
+				.append(counter.incrementAndGet())
+				.append(space)
+				.append(bean.beanName())
+				.append(space)
+				.append(bean.pkg())
+				.toString();
+		System.out.println(message);
+		return message;
+	};
+
 	@Disabled
 	@Test
 	void should_be_stable_number_of_not_user_beans() {
 
 		//Given
-		int expectedBeans = 152;
+		int expectedBeans = 145;
 		String rootPackage = "info.jab.ms";
 
 		//When
 		AtomicInteger counter = new AtomicInteger();
 		String space = " ";
-		BiPredicate<String, String> filter = (x, y) -> x.contains(y);
-		BiPredicate<String, String> filterNegated = filter.negate();
 		var userBeans = beanInventory.beans().stream()
-				.filter(bean -> filterNegated.test(bean.pkg(), rootPackage))
+				.filter(Predicate.not(bean -> bean.pkg().contains(rootPackage)))
 				.sorted(Comparator.comparing(BeanInventoryConfiguration.Tuple::beanName))
-				.map(beanName -> new StringBuilder()
-						.append(counter.incrementAndGet())
-						.append(space)
-						.append(beanName.beanName())
-						.append(space)
-						.append(beanName.pkg())
-						.toString())
-				.peek(System.out::println)
+				.peek(bean -> expand.apply(counter, bean))
 				.toList();
 
 		//Then
