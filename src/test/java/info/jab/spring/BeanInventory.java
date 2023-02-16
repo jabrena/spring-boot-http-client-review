@@ -29,6 +29,10 @@ public class BeanInventory {
 
 		final String[] beanNames = applicationContext.getBeanDefinitionNames();
 		for (String beanName : beanNames) {
+			//Avoid the circular reference issue
+			if(beanName.contains("BeanInventory")) {
+				continue;
+			}
 			final Object beanObject = applicationContext.getBean(beanName);
 			Class<?> targetClass = AopUtils.getTargetClass(beanObject);
 

@@ -16,7 +16,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
 @Import(BeanInventory.class)
-@TestPropertySource(properties = { "spring.main.allow-circular-references=true" }) //TODO Remove ASAP
 class BeanInventoryTests {
 
 	@Autowired
@@ -58,7 +57,7 @@ class BeanInventoryTests {
 	void should_be_stable_number_of_not_user_beans() {
 
 		//Given
-		int expectedBeans = 150;
+		int expectedBeans = 149;
 		String rootPackage = "info.jab.ms";
 
 		//When
