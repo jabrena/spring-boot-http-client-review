@@ -9,6 +9,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,12 +24,13 @@ public class BeanInventory {
 	private ConfigurableApplicationContext applicationContext;
 
 	public record BeanInfo(String name, String pkg) {}
-	private final List<BeanInfo> beans = new ArrayList<>();
+	private List<BeanInfo> beans;
 
 	@PostConstruct
 	private void after() {
 
 		final String[] beanNames = applicationContext.getBeanDefinitionNames();
+		List<BeanInfo> tempList = new ArrayList<>();
 		for (String beanName : beanNames) {
 			//Avoid the circular reference issue
 			if(beanName.contains("BeanInventory")) {
@@ -42,8 +45,9 @@ public class BeanInventory {
 				targetClass = proxiedInterfaces[0];
 			}
 
-			beans.add(new BeanInfo(beanName, targetClass.getPackageName()));
+			tempList.add(new BeanInfo(beanName, targetClass.getPackageName()));
 		}
+		beans = Collections.unmodifiableList(tempList);
 	}
 
 	public List<BeanInfo> getBeans() {
