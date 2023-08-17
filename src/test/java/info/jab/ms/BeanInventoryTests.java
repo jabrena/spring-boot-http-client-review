@@ -25,7 +25,7 @@ class BeanInventoryTests {
 	void should_be_stable_number_of_user_beans() {
 
 		//Given
-		int expectedBeans = 8;
+		int expectedBeans = 12;
 		String rootPackage = "info.jab.ms";
 
 		//When
@@ -57,7 +57,7 @@ class BeanInventoryTests {
 	void should_be_stable_number_of_not_user_beans() {
 
 		//Given
-		int expectedBeans = 149;
+		int expectedBeans = 158;
 		String rootPackage = "info.jab.ms";
 
 		//When

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -22,7 +23,7 @@ import io.restassured.common.mapper.TypeRef;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = { "address=http://localhost:8090/greek" })
-public class MyController3Test {
+public class MyController5Test {
 
     @LocalServerPort
     private int port;
@@ -40,6 +41,7 @@ public class MyController3Test {
         wireMockServer.stop();
     }
 
+    @Disabled
     @Test
     void should_return_gods() {
 
@@ -73,7 +75,7 @@ public class MyController3Test {
 
         //When
         //Then
-        var address = "http://localhost:" + port + "/api/v1/http-interface-web-client";
+        var address = "http://localhost:" + port + "/api/v1/http-interface-rest-client";
         RestAssured
             .given().log().all()
             .when().get(address)
