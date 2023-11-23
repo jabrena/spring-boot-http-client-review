@@ -23,6 +23,7 @@ public class WebConfiguration {
         return builder.build();
     }
 
+    //Http Interfaces
     @Bean(name = "http-interface-rest-client")
     GodService godServiceRestClient(RestClient client) {
         return HttpServiceProxyFactory
