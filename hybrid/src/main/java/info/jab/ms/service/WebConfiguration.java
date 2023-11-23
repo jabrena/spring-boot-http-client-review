@@ -25,7 +25,7 @@ public class WebConfiguration {
     @Bean(name = "http-interface-web-client")
     GodService godServiceWebClient(WebClient client) {
         return HttpServiceProxyFactory
-                .builderFor(WebClientAdapter.forClient(client))
+                .builderFor(WebClientAdapter.create(client))
                 .build()
                 .createClient(GodService.class);
     }
