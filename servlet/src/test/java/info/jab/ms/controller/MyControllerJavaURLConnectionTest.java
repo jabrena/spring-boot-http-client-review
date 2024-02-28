@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = { "address=http://localhost:8090/greek" })
-public class MyController4Test {
+public class MyControllerJavaURLConnectionTest {
 
     @LocalServerPort
     private int port;
@@ -40,7 +40,7 @@ public class MyController4Test {
     }
 
     @Test
-    void should_use_restTemplate() {
+    void should_use_java_urlconnection() {
 
         //Given
         wireMockServer.stubFor(get(urlEqualTo("/greek"))
@@ -72,7 +72,7 @@ public class MyController4Test {
 
         //When
         //Then
-        var address = "http://localhost:" + port + "/api/v1/rest-client";
+        var address = "http://localhost:" + port + "/api/v1/java-urlconnection";
         RestAssured
             .given().log().all()
             .when().get(address)

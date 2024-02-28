@@ -2,6 +2,19 @@
 
 [![CI Builds](https://github.com/jabrena/spring-boot-http-client-poc/actions/workflows/build.yaml/badge.svg)](https://github.com/jabrena/spring-boot-http-client-poc/actions/workflows/build.yaml)
 
+**Cloud IDEs:**
+
+[![](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/jabrena/spring-boot-http-client-poc)
+
+---
+
+## How to build in local
+
+```bash
+mvn clean verify
+mvn clean test -pl servlet/
+```
+
 ## Motivation
 
 Spring Frameworks provide a set of Clients to interact with HTTP Protocol.
@@ -11,35 +24,70 @@ This repository tries to explore how to use the different HTTP Clients provided 
 
 ## History
 
-Traditionally Spring ecosystem has delivered features to offer HTTP support for Servlet environments from the beginning using the client *RESTTemplate* which implements the Template Design pattern.
+In Java, you can interact with http using the classic Object URLConnection:
+
+```java
+public List<String> getGods() {
+
+    List<String> responseBody = new ArrayList<>();
+
+    try {
+        URL url = new URL(address);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", "application/json");
+        int responseCode = connection.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder responseBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseBuilder.append(line);
+            }
+            reader.close();
+    
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBuilder.toString());
+            
+            if (jsonNode.isArray()) {
+                for (JsonNode node : jsonNode) {
+                    responseBody.add(node.toString());
+                }
+            } else {
+                responseBody.add(jsonNode.toString());
+            }
+        }
+        connection.disconnect();
+
+    } catch (IOException e) {
+        logger.error(e.getMessage(), e);
+    }
+
+    return responseBody.stream().map(god -> god.replace("\"", "")).toList();
+}
+```
+
+- Javadoc: https://docs.oracle.com/javase/8/docs/api/java/net/URLConnection.html
+
+But this approach involve several low-level parts for a simple http interaction.
+
+In order to help the developers, Spring ecosystem has delivered features to offer HTTP support for Servlet environments from the beginning using the client *RESTTemplate* which implements the Template Design pattern.
 
 - Javadoc Spring Framework 5, Spring Boot 2.x: https://docs.spring.io/spring-framework/docs/5.3.9/javadoc-api/org/springframework/web/client/RestTemplate.html
 - Javadoc Spring Framework 6, Spring Boot 3.x: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestTemplate.html
 
 ```java
-@SpringBootApplication
-public class ConsumingRestApplication {
+public List<String> getGods() {
+    ResponseEntity<List<String>> result =
+            restTemplate.exchange(
+                    address,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
 
-	private static final Logger log = LoggerFactory.getLogger(ConsumingRestApplication.class);
-
-	public static void main(String[] args) {
-		SpringApplication.run(ConsumingRestApplication.class, args);
-	}
-
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder.build();
-	}
-
-	@Bean
-	@Profile("!test")
-	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
-		return args -> {
-			Quote quote = restTemplate.getForObject(
-					"http://localhost:8080/api/random", Quote.class);
-			log.info(quote.toString());
-		};
-	}
+    return result.getBody();
 }
 ```
 
@@ -50,27 +98,6 @@ In the last Decade, Java ecosystem evolved with the reactive programming paradym
 and in 2017, Spring Boot released the reactive support for it:
 
 - https://mvnrepository.com/artifact/org.springframework/spring-webflux
-
-```java
-@Service
-public class MyService {
-
-	private final WebClient webClient;
-
-	public MyService(WebClient.Builder webClientBuilder) {
-		this.webClient = webClientBuilder.baseUrl("http://example.org").build();
-	}
-
-	public Mono<Details> someRestCall(String name) {
-		return this.webClient.get().url("/{name}/details", name)
-						.retrieve().bodyToMono(Details.class);
-	}
-
-}
-```
-
-- Example from: https://docs.spring.io/spring-boot/docs/2.0.3.RELEASE/reference/html/boot-features-webclient.html
-
 
 in 2022 with the release of Spring Framework 6.1, it included **HTTP Interfaces**
 
@@ -92,6 +119,67 @@ in 2024, Spring Boot 3.2 release, it included a new HTTP Client based on fluent 
 - Javadoc Spring Framework 6, Spring Boot 3.2 >: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestClient.html
 
 ```java
+public List<String> getGods() {        
+    ResponseEntity<List<String>> result =
+        this.restClient
+            .get()
+            .uri(address)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .toEntity(new ParameterizedTypeReference<>() {});
+    return result.getBody();
+}
+```
+
+Note: Obviously, to that Spring Solutions, you can configure:
+
+```java
+@Configuration(proxyBeanMethods = false)
+public class WebConfiguration {
+
+    //Spring RestTemplate
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.build();
+    }
+
+    //Spring RestClient
+    @Bean
+    RestClient restClient(RestTemplate restTemplate) {
+        return RestClient.create(restTemplate);
+    }
+
+    /*
+    @Bean
+    RestClient restClient(RestClient.Builder builder) {
+       return builder.build();
+    }
+    */
+
+    //Http Interfaces
+    @Bean(name = "http-interface-rest-client")
+    GodService godServiceRestClient(RestClient client) {
+        return HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(client))
+                .build()
+                .createClient(GodService.class);
+    }
+}
+```
+
+## What is the level of activity about RestClient?
+
+- https://github.com/spring-projects/spring-boot/issues?q=is%3Aissue+restclient+is%3Aclosed
+
+## How to use the client:
+
+From the documentation, you could use the new client in several ways:
+
+- https://docs.spring.io/spring-framework/reference/integration/rest-clients.html
+
+```java
+
+//General usage
 RestClient defaultClient = RestClient.create();
 
 RestClient customClient = RestClient.builder()
@@ -103,20 +191,14 @@ RestClient customClient = RestClient.builder()
   .requestInterceptor(myCustomInterceptor)
   .requestInitializer(myCustomInitializer)
   .build();
-```
 
-## What is the level of activity about RestClient?
-
-- https://github.com/spring-projects/spring-boot/issues?q=is%3Aissue+restclient+is%3Aclosed
-
-## How to use the client:
-
-```java
+//GET Retrieving a Primitive type
 String result = restClient.get() 
   .uri("https://example.com") 
   .retrieve() 
   .body(String.class);
 
+//GET Retrieving an Single Object
 int id = ...;
 Pet pet = restClient.get()
   .uri("https://petclinic.example.com/pets/{id}", id) 
@@ -124,6 +206,13 @@ Pet pet = restClient.get()
   .retrieve()
   .body(Pet.class);
 
+//GET Retrieve a List of Objects
+List<Article> articles = restClient.get()
+  .uri(uriBase + "/articles")
+  .retrieve()
+  .body(new ParameterizedTypeReference<>() {});
+
+//POST Sending a new Object as payload
 Pet pet = new Pet(); 
 ResponseEntity<Void> response = restClient.post() 
   .uri("https://petclinic.example.com/pets/new") 
@@ -131,6 +220,8 @@ ResponseEntity<Void> response = restClient.post()
   .body(pet) 
   .retrieve()
   .toBodilessEntity();
+
+
 
 //Error handling
 String result = restClient.get() 
@@ -141,6 +232,7 @@ String result = restClient.get()
   })
   .body(String.class);
 
+//Complex stuff
 Pet result = restClient.get()
   .uri("https://petclinic.example.com/pets/{id}", id)
   .accept(APPLICATION_JSON)
@@ -159,14 +251,6 @@ Pet result = restClient.get()
 
 - Servlet: spring-boot-starter-web
 - Hybrid: spring-boot-starter-web + spring-boot-starter-webflux
-
-## How to run in local?
-
-```bash
-sdk env
-sdk install mvnd
-mvnd verify 
-```
 
 ## References
 

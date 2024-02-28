@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,7 +24,7 @@ class BeanInventoryTests {
 	void should_be_stable_number_of_user_beans() {
 
 		//Given
-		int expectedBeans = 8;
+		int expectedBeans = 10;
 		String rootPackage = "info.jab.ms";
 
 		//When

@@ -1,6 +1,7 @@
 package info.jab.ms.controller;
 
-import info.jab.ms.service.MyService;
+import info.jab.ms.service.GodService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class MyController4 {
+public class MyControllerHttpInterface {
 
+    @Qualifier("http-interface-rest-client")
     @Autowired
-    @Qualifier("restclient")
-    private MyService myService;
+    private GodService godService;
 
-    @GetMapping("/api/v1/rest-client")
+    @GetMapping("/api/v1/http-interface-rest-client")
     public List<String> getData() {
-        return myService.getGods();
+        return godService.getGods();
     }
 }
