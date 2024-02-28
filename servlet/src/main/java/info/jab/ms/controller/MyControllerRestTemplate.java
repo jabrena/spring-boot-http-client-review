@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class MyController1 {
+public class MyControllerRestTemplate {
 
     @Autowired
     @Qualifier("restemplate")

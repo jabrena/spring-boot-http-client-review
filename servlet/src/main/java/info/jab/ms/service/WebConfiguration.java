@@ -19,9 +19,16 @@ public class WebConfiguration {
 
     //Spring RestClient
     @Bean
-    RestClient restClient(RestClient.Builder builder) {
-        return builder.build();
+    RestClient restClient(RestTemplate restTemplate) {
+        return RestClient.create(restTemplate);
     }
+
+    /*
+    @Bean
+    RestClient restClient(RestClient.Builder builder) {
+       return builder.build();
+    }
+    */
 
     //Http Interfaces
     @Bean(name = "http-interface-rest-client")
@@ -31,5 +38,4 @@ public class WebConfiguration {
                 .build()
                 .createClient(GodService.class);
     }
-
 }

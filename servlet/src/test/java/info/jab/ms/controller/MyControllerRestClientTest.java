@@ -1,29 +1,27 @@
 package info.jab.ms.controller;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.util.List;
-
+import com.github.tomakehurst.wiremock.WireMockServer;
+import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
+import java.util.List;
 
-import io.restassured.RestAssured;
-import io.restassured.common.mapper.TypeRef;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = { "address=http://localhost:8090/greek" })
-public class MyController5Test {
+public class MyControllerRestClientTest {
 
     @LocalServerPort
     private int port;
@@ -41,9 +39,8 @@ public class MyController5Test {
         wireMockServer.stop();
     }
 
-    @Disabled
     @Test
-    void should_return_gods() {
+    void should_use_restTemplate() {
 
         //Given
         wireMockServer.stubFor(get(urlEqualTo("/greek"))
@@ -75,7 +72,7 @@ public class MyController5Test {
 
         //When
         //Then
-        var address = "http://localhost:" + port + "/api/v1/http-interface-rest-client";
+        var address = "http://localhost:" + port + "/api/v1/rest-client";
         RestAssured
             .given().log().all()
             .when().get(address)

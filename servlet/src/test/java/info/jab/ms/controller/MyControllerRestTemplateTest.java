@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = { "address=http://localhost:8090/greek" })
-public class MyController1Test {
+public class MyControllerRestTemplateTest {
 
     @LocalServerPort
     private int port;
