@@ -298,10 +298,10 @@ Pet result = restClient.get()
   });
 ```
 
-## Project structure:
+## Another alternatives
 
-- Servlet: spring-boot-starter-web
-- Hybrid: spring-boot-starter-web + spring-boot-starter-webflux
+- https://square.github.io/okhttp/
+- https://hc.apache.org/httpcomponents-client-5.3.x/index.html
 
 ## References
 
