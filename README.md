@@ -303,6 +303,10 @@ Pet result = restClient.get()
 - https://square.github.io/okhttp/
 - https://hc.apache.org/httpcomponents-client-5.3.x/index.html
 
+## Further details
+
+- https://github.com/jabrena/spring-boot-user-beans
+
 ## References
 
 - https://en.wikipedia.org/wiki/HTTP
