@@ -91,6 +91,46 @@ public List<String> getGods() {
 }
 ```
 
+In Java 11, the language published a new way to interact with http protocol
+
+```java
+public List<String> getGods() {
+
+    List<String> responseBody = new ArrayList<>();
+
+    try {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(address))
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == 200) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response.body());
+            
+            if (jsonNode.isArray()) {
+                for (JsonNode node : jsonNode) {
+                    responseBody.add(node.toString());
+                }
+            } else {
+                responseBody.add(jsonNode.toString());
+            }
+        }
+
+    } catch (IOException | InterruptedException e) {
+        logger.error(e.getMessage(), e);
+    }
+
+    return responseBody.stream().map(god -> god.replace("\"", "")).toList();
+}
+```
+
+- Javadocs: https://docs.oracle.com/en%2Fjava%2Fjavase%2F11%2Fdocs%2Fapi%2F%2F/java.net.http/java/net/http/HttpClient.html
+
 In the last Decade, Java ecosystem evolved with the reactive programming paradym and Spring ecosystem adapted to it and in 2013, Spring released the first GA release for Reactor: 
 
 - https://mvnrepository.com/artifact/org.projectreactor/reactor-spring/1.0.0.RELEASE
@@ -98,6 +138,17 @@ In the last Decade, Java ecosystem evolved with the reactive programming paradym
 and in 2017, Spring Boot released the reactive support for it:
 
 - https://mvnrepository.com/artifact/org.springframework/spring-webflux
+
+and webflux provided a Reactive client:
+
+```java
+public Mono<List<String>> getGods() {
+    return webClient
+            .get()
+            .retrieve()
+            .bodyToMono(new ParameterizedTypeReference<List<String>>() {});
+}
+```
 
 in 2022 with the release of Spring Framework 6.1, it included **HTTP Interfaces**
 
